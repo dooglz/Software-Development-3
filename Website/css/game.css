@@ -1,0 +1,23 @@
+.gametile {
+    background-color: #ffe;
+
+    
+    min-width: 23%;
+    height:23%;
+    float: left;
+    margin: 1%
+}
+
+.stretchy-wrapper {
+
+    overflow: hidden;
+   background-color: #A3e
+}
+
+
+td { display: block; float: left; border: 1px solid black; width: 25%; padding-bottom: 25%; background-color: #fee;  }
+
+td div { position: absolute;}
+table { display: block; width: 100%; }
+tr { display: block; width: 100%; }
+tbody { display: block; width: 100%; }
