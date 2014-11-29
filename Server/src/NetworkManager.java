@@ -27,7 +27,7 @@ public final class NetworkManager extends WebSocketServer {
 	public void onMessage(WebSocket conn, String message) {
 		//Handle client received message here
 	    //send a message back:
-	    conn.send("A message");
+	    conn.send("Hello");
 	}
 	
 	@Override

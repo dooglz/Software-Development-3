@@ -115,6 +115,15 @@
                 <a class="btn btn-lg btn-success" href="#" role="button">Undo</a>
                 <a class="btn btn-lg btn-success" href="#" role="button">Redo</a>
           </p>
+          <p>
+              Server Address: 
+              <input type="text" name="ipbx" placeholder="ws://127.0.0.1:8887" id="Ipbox"> 
+              <a class="btn btn-sm btn-success" href="#" role="button" id="connectbtn">Connect</a>
+          </p>
+        <p>
+            Connection Status: <span id="constatus">Disconnected</span>
+          </p>
+          
         <div class="col-lg-6">
           <h4>Subheading</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
@@ -132,5 +141,8 @@
       </footer>
 
     </div> <!-- /container -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/Game.js"></script>
   </body>
 </html>
