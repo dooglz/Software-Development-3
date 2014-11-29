@@ -1,3 +1,4 @@
+package sd3;
 import java.net.InetSocketAddress;
 
 import org.java_websocket.WebSocket;
@@ -21,22 +22,34 @@ public final class NetworkManager extends WebSocketServer {
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 		//Handle closing connection here	
+		Main.newGame(System.identityHashCode(conn));
 	}
 	
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		//Handle client received message here
 	    //send a message back:
-	    if(message.equals( "state")){
-	    	conn.send("{\"type\":\"state\",\"time\":100,\"state\":\"play\",\"grid\":[{\"type\":\"frigate\",\"X\":0,\"Y\":3,\"id\":0},{\"type\":\"frigate\",\"X\":2,\"Y\":3,\"id\":1},{\"type\":\"player\",\"X\":0,\"Y\":3,\"id\":2}]}");
-	    }else{
+	    if(message.equals("state")){
+	    	sendState(conn);
+	    }else if(message.equals("Hello")){
 	    	conn.send("Hello");
+	    }else if(message.equals("TurnP")){
+	    	Main.getGame(System.identityHashCode(conn)).turn(true);
+	    	sendState(conn);
+	    }else if(message.equals("TurnA")){
+	    	Main.getGame(System.identityHashCode(conn)).turn(false);
+	    	sendState(conn);
 	    }
 	}
 	
 	@Override
 	public void onError(WebSocket conn, Exception ex) {
 		//Handle error during transport here
+	}
+	
+	public static void sendState(WebSocket conn)
+	{
+		conn.send(Serializer.jsonify(Main.getGame(System.identityHashCode(conn))));
 	}
 
 }

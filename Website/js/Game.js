@@ -4,6 +4,7 @@ var aaf = 0;
 var SOCKET;
 var SOCKETSTATE;
 var ships = [];
+var PLAYER;
 
 function verifyWSsupport() {
     if ("WebSocket" in window) {
@@ -81,6 +82,17 @@ function Connect(IP) {
     };
 }
 
+
+function doTurn(){
+	if (SOCKETSTATE === "READY") {
+		if($("#myonoffswitch").prop('checked')){
+			SOCKET.send("TurnP");
+		}else{
+ 			SOCKET.send("TurnA");
+		}
+	}
+}
+
 $(document).ready(function () {
     SOCKETSTATE = "NULL";
     verifyWSsupport();
@@ -90,6 +102,10 @@ $(document).ready(function () {
     $("#resbtn").click(function () {
         getState();
     });
+	$("#trnbtn").click(function () {
+        doTurn();
+    });
+	
     // var timer = window.requestAnimationFrame(Update);
     //window.requestAnimationFrame
     var timer = setInterval(Update, 100);
@@ -138,16 +154,52 @@ function UpdateGrid(grid) {
                 id: 'ship' + newship.id,
                 class: 'ship ' + col,
             }).appendTo('#' + newship.X + newship.Y);
+			
+			if(newship.type === "player"){PLAYER =  newship.jqo;}
 
             ships[ships.length] = newship;
 
         } else if (result.length == 1) {
             result[0].X = grid[i].X;
             result[0].Y = grid[i].Y;
+			result[0].jqo.detach().appendTo('#' + result[0].X + result[0].Y);
+			
         } else {
             console.error("!!!!2");
-        }
+        }	
     }
+	//any dead ships?
+	//do a reverse sweep to find them
+	for (var i = 0; i < ships.length; i++) {
+		var result = $.grep(grid, function(e) {
+			return e.id == ships[i].id;
+		});
+		if (result.length == 0) {
+			//dead
+			killShip(i);
+			i--;
+		}
+	}
+}
+
+function killShip(index){
+	var deadship = ships[index];
+	if(deadship.type == "player"){
+		console.error("game over");
+	}else{
+		console.error("dead ship");
+		//move towards player and explode
+		var offset = deadship.jqo.offset()
+		deadship.jqo.detach().appendTo(document.body);
+		deadship.jqo.css("left", offset.left + "px");
+        deadship.jqo.css("top", offset.top + "px");
+		ships.splice(index,1);
+		
+		deadship.jqo.animate({
+			left: PLAYER.offset().left+ "px",
+			top: PLAYER.offset().top+ "px"}, 
+			5000, function() {this.remove();});
+	}
 
 }
 

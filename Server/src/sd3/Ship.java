@@ -1,10 +1,12 @@
+package sd3;
 
 public class Ship {
-	private byte _x;
-	private byte _y;
-	private byte _maxHealth;
-	private byte _health;
-	private byte _strength;
+	protected byte _x;
+	protected byte _y;
+	protected byte _maxHealth;
+	protected byte _health;
+	protected byte _strength;
+	protected String _type;
 	
 	public Ship(byte x, byte y){
 		_x = x;
@@ -56,5 +58,9 @@ public class Ship {
 	
 	public byte GetY(){
 		return _y;
+	}
+	
+	public String GetType(){
+		return _type;
 	}
 }
