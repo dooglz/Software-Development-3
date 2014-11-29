@@ -29,6 +29,7 @@ public final class NetworkManager extends WebSocketServer {
 	public void onMessage(WebSocket conn, String message) {
 		//Handle client received message here
 	    //send a message back:
+		System.out.println("Message: "+message);
 	    if(message.equals("state")){
 	    	sendState(conn);
 	    }else if(message.equals("Hello")){
@@ -49,6 +50,7 @@ public final class NetworkManager extends WebSocketServer {
 	
 	public static void sendState(WebSocket conn)
 	{
+		System.out.println("sending state");
 		conn.send(Serializer.jsonify(Main.getGame(System.identityHashCode(conn))));
 	}
 

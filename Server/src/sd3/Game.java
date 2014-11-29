@@ -12,6 +12,7 @@ public class Game {
 	{	
 		_enemies = new ArrayList<Ship>();
 		_player = new PlayerShip((byte)1, (byte)1);
+		_enemies.add(new BattleStar());
 		running = true;
 	}
 	
@@ -19,11 +20,13 @@ public class Game {
 	{
 		//spawn new enemy
 		if (Math.random() > (1d/3d)){
-			_enemies.add(new BattleStar());
+			//_enemies.add(new BattleStar());
 		}
 		
 		//update  all enemies
-		for(Ship s : _enemies){
+		for(int i =0; i<_enemies.size();i++){
+			Ship s = _enemies.get(i);
+		
 			s.Heal();
 			byte x; 
 			byte y;
@@ -42,6 +45,7 @@ public class Game {
 			//check for dead ships
 			if (s.GetHealth() <= 0){
 				_enemies.remove(s);
+				i--;
 				System.out.println("Dead ship");
 			}
 		}

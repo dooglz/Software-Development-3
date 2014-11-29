@@ -195,10 +195,9 @@ function killShip(index){
         deadship.jqo.css("top", offset.top + "px");
 		ships.splice(index,1);
 		
-		deadship.jqo.animate({
-			left: PLAYER.offset().left+ "px",
-			top: PLAYER.offset().top+ "px"}, 
-			5000, function() {this.remove();});
+		deadship.jqo
+		.animate({left: PLAYER.offset().left+ "px", top: PLAYER.offset().top+ "px"}, 3000)
+		.animate({opacity:0},2000, function() {deadship.jqo.remove();});
 	}
 
 }
