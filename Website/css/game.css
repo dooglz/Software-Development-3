@@ -1,11 +1,5 @@
 .gametile {
-    background-color: #ffe;
-
-    
-    min-width: 23%;
-    height:23%;
-    float: left;
-    margin: 1%
+    background-image: url("../img/stars.jpg");
 }
 
 .stretchy-wrapper {
@@ -15,9 +9,30 @@
 }
 
 
-td { display: block; float: left; border: 1px solid black; width: 25%; padding-bottom: 25%; background-color: #fee;  }
+td { display: block; float: left; border: 1px solid white; width: 25%; padding-bottom: 25%; background-color: #fee;  background-image: url("../img/stars.jpg");}
 
-td div { position: absolute;}
+td div { position: absolute; }
 table { display: block; width: 100%; }
 tr { display: block; width: 100%; }
 tbody { display: block; width: 100%; }
+
+
+.ship {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 50;
+    background-size:contain;
+    background-repeat: no-repeat;
+    min-height: 50px;
+    min-width:  80px;
+}
+.ship.green {
+    background-image: url("../img/ship1.gif");
+}
+.ship.red  {
+    background-image: url("../img/ship2.gif");
+}
+.ship.blue  {
+    background-image: url("../img/ship3.gif");
+}

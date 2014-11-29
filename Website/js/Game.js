@@ -4,6 +4,9 @@ $(document).ready(function(){
     $("#connectbtn").click(function(){
         Connect($("#Ipbox").val());
     });
+    $("#resbtn").click(function(){
+        getState();
+    });
 });
 
 
@@ -66,21 +69,102 @@ function Connect(IP){
     
 }
 
-
 function Decoder(msg)
 {
-    switch(msg)
-    {
-        case("Hello"):
-            console.info("Server says Hello");
-            $("#constatus").html("Server connected");
-            SOCKETSTATE = "READY";
-            break;
-        default:
-            console.info("Unkown message from host: "+msg);
-            break;
+ //   var ship = {type:"frigate", X:0, Y:3};
+ //   var gamegrid = [{type:"frigate", X:0, Y:3},{type:"frigate", X:2, Y:3},{type:"player", X:4, Y:3}];
+ //   var state = {time:100,state:"play",grid:gamegrid} ;
+   // console.info(JSON.stringify(state));
+    var obj;
+    
+    try {
+        obj = JSON.parse(msg);
+    } catch (e) {
+        // is not a valid JSON string
+        switch(msg)
+        {
+            case("Hello"):
+                console.info("Server says Hello");
+                $("#constatus").html("Server connected");
+                SOCKETSTATE = "READY";
+                break;
+            default:
+                console.info("Unkown message from host: "+msg);
+                break;
+        }
+        return;
+    }
+   
+    if(obj.type == "state"){
+        console.info("state update, "+obj.time);
+        UpdateGrid(obj.grid);
     }
 }
+
+function getState(){
+    if(SOCKETSTATE == "READY")
+    {
+        SOCKET.send("state");
+    }   
+}
+
+var ships = [];
+
+function UpdateGrid(grid){
+    console.info(grid);
+    for	(i = 0; i < grid.length; i++) {
+        
+        if(grid[i].id == undefined){console.error("!!!!");}
+        
+        var result = $.grep(ships, function(e){ return e.id == grid[i].id});
+        
+        if (result.length == 0) {
+          // not found, new ship
+            var newship = new Object();
+            
+            newship.X = grid[i].X;
+            newship.Y = grid[i].Y;
+            newship.type = grid[i].type;
+            newship.id = grid[i].id;
+        
+            newship.jqo = jQuery('<div/>', {
+                id: 'ship'+newship.id,
+                class: 'ship red',
+            }).appendTo('#'+newship.X+newship.Y);
+        
+            ships[ships.length] = newship;
+        
+        } else if (result.length == 1) {
+            result[0].X = grid[i].X;
+            result[0].Y = grid[i].Y;
+        } else {
+            console.error("!!!!2");
+        }
+    }
+    
+}
+
+//-------------------------------
+
+//var ship = {id:0,type:"frigate", X:0, Y:3, jqo};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

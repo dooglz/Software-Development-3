@@ -27,7 +27,11 @@ public final class NetworkManager extends WebSocketServer {
 	public void onMessage(WebSocket conn, String message) {
 		//Handle client received message here
 	    //send a message back:
-	    conn.send("Hello");
+	    if(message.equals( "state")){
+	    	conn.send("{\"type\":\"state\",\"time\":100,\"state\":\"play\",\"grid\":[{\"type\":\"frigate\",\"X\":0,\"Y\":3,\"id\":0},{\"type\":\"frigate\",\"X\":2,\"Y\":3,\"id\":1},{\"type\":\"player\",\"X\":1,\"Y\":3,\"id\":2}]}");
+	    }else{
+	    	conn.send("Hello");
+	    }
 	}
 	
 	@Override
