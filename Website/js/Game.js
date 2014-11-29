@@ -1,3 +1,5 @@
+var aaf =0;
+
 $(document).ready(function(){
    SOCKETSTATE = "NULL";
     verifyWSsupport();
@@ -7,6 +9,9 @@ $(document).ready(function(){
     $("#resbtn").click(function(){
         getState();
     });
+   // var timer = window.requestAnimationFrame(Update);
+    //window.requestAnimationFrame
+    var timer = setInterval(Update, 100);
 });
 
 
@@ -143,6 +148,32 @@ function UpdateGrid(grid){
     }
     
 }
+
+
+function Update(yo){
+    aaf += 0.1;
+    var os = $('td').outerWidth();
+    $( ".gametile" ).each(function( index ) {
+       
+        //foreach gametile
+        var s = $(this).children('.ship').size();
+        $(this).children('.ship').each(function( index2 ) {
+            var is = $(this).outerWidth();
+            var max = (os - is)*0.5;
+            console.log(os +" "+is);
+          //  console.log( index +"- "+ index2 +": " + $( this ).attr("class") );
+            var p = Math.PI/s;
+            var q = aaf - (p * (index2+1));
+            var x = max*Math.sin(q);
+            var y = max*Math.cos(q);
+            // console.log(p+" "+q+" "+x);
+            $( this ).css("left",(max+x)+"px");
+            $( this ).css("top",(max+y)+"px");
+        });
+    });
+}
+
+
 
 //-------------------------------
 

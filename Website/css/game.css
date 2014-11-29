@@ -1,11 +1,10 @@
 .gametile {
-    background-image: url("../img/stars.jpg");
 }
 
 .stretchy-wrapper {
+overflow: auto;
+   background-color: #A3e;
 
-    overflow: hidden;
-   background-color: #A3e
 }
 
 
