@@ -1,5 +1,6 @@
 package sd3;
 
+import sd3.Vector2;
 import Ships.CombatMode;
 import Ships.MoveMethod;
 import Ships.Random9WayMovement;
@@ -53,7 +54,7 @@ public class Ship {
 	}
 	
 	public void Move(){
-		MoveMethod.Vector2 v =  _moveMethod.nextMove(_x,_y);
+		Vector2 v =  _moveMethod.nextMove(_x,_y);
 		_x = v.x;
 		_y = v.y;
 	}

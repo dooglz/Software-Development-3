@@ -17,7 +17,8 @@ public class Game {
 	}
 	
 	public void Update()
-	{		
+	{	
+		GameState newState = new GameState();
 		_player.Heal();
 		_player.Move();
 		
@@ -68,6 +69,11 @@ public class Game {
 		_player.setAggressive(mode);
 		Update();
 		return;
+	}
+	
+	public void undo()
+	{
+		
 	}
 	
 }

@@ -26,7 +26,6 @@ function updateUI()
 		$("#trnbtn").attr("disabled", true);
 		$("#resbtn").attr("disabled", true);
 		$("#undobtn").attr("disabled", true);
-		$("#redobtn").attr("disabled", true);
 		$("#Ipbox").attr("disabled", true);
 		$("#connectbtn").attr("disabled", true);
 		$("#disconctbtn").attr("disabled", true);
@@ -40,7 +39,6 @@ function updateUI()
 			$("#trnbtn").attr("disabled", true);
 			$("#resbtn").attr("disabled", true);
 			$("#undobtn").attr("disabled", true);
-			$("#redobtn").attr("disabled", true);
 			$("#Ipbox").attr("disabled", true);
 			$("#connectbtn").attr("disabled", true);
 			$("#disconctbtn").attr("disabled", true);
@@ -50,7 +48,6 @@ function updateUI()
 			$("#trnbtn").attr("disabled", true);
 			$("#resbtn").attr("disabled", true);
 			$("#undobtn").attr("disabled", true);
-			$("#redobtn").attr("disabled", true);
 			$("#Ipbox").attr("disabled", false);
 			$("#connectbtn").attr("disabled", false);
 			$("#disconctbtn").attr("disabled", true);
@@ -63,7 +60,6 @@ function updateUI()
 					$("#trnbtn").attr("disabled", false);
 					$("#resbtn").attr("disabled", false);
 					$("#undobtn").attr("disabled", false);
-					$("#redobtn").attr("disabled", false);
 					$("#Ipbox").attr("disabled", true);
 					$("#connectbtn").attr("disabled", true);
 					$("#disconctbtn").attr("disabled", false);
@@ -73,7 +69,6 @@ function updateUI()
 					$("#trnbtn").attr("disabled", true);
 					$("#resbtn").attr("disabled", true);
 					$("#undobtn").attr("disabled", true);
-					$("#redobtn").attr("disabled", true);
 					$("#Ipbox").attr("disabled", true);
 					$("#connectbtn").attr("disabled", true);
 					$("#disconctbtn").attr("disabled", true);
@@ -83,7 +78,6 @@ function updateUI()
 					$("#trnbtn").attr("disabled", true);
 					$("#resbtn").attr("disabled", false);
 					$("#undobtn").attr("disabled", true);
-					$("#redobtn").attr("disabled", true);
 					$("#Ipbox").attr("disabled", true);
 					$("#connectbtn").attr("disabled", true);
 					$("#disconctbtn").attr("disabled", false);
@@ -187,6 +181,12 @@ function doTurn(){
 	}
 }
 
+function Undo(){
+	if (SOCKETSTATE === "READY") {
+        SOCKET.send("UNDO");
+    }
+}
+
 $(document).ready(function () {
     SOCKETSTATE = "NULL";
 	GAMESTATE = "NULL";
@@ -197,6 +197,11 @@ $(document).ready(function () {
     $("#disconctbtn").click(function () {
 		SOCKET.close();
     });
+	
+	$("#undobtn").click(function () {
+		Undo();
+    });
+	
 	$("#resbtn").click(function () {
 		Restart();
     });

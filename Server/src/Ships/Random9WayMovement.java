@@ -1,5 +1,7 @@
 package Ships;
 
+import sd3.Vector2;
+
 public class Random9WayMovement implements MoveMethod {
 
 	@Override

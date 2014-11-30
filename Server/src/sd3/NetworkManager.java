@@ -42,6 +42,10 @@ public final class NetworkManager extends WebSocketServer {
 	    	sendState(conn);
 	    }else if(message.equals("RESTART")){
 	    	Main.removeGame(System.identityHashCode(conn));
+	    }else if(message.equals("UNDO")){
+	    	System.out.println("Game wants an undo");
+	    	Main.getGame(System.identityHashCode(conn)).undo();
+	    	sendState(conn);
 	    }
 	}
 	
