@@ -7,7 +7,7 @@ var ANIMATING;
 var GAMESTATE;
 var ships = [];
 var PLAYEROBJ;
-var MOVETIME = 1500;
+var MOVETIME = 1000;
 var LASTSTATE;
 
 function verifyWSsupport() {
@@ -283,6 +283,15 @@ function UpdateGrid(grid) {
             switch (newship.type) {
                 case "player":
                     col = 'p';
+                    break;
+				case "BattleShooter":
+                    col = 'e2';
+                    break;
+				case "BattleCruiser":
+                    col = 'e3';
+                    break;
+			 	case "BattleStar":
+                    col = 'e4';
                     break;
                 default:
                     col = 'e1';

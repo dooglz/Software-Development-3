@@ -6,7 +6,7 @@ import Ships.MoveMethod;
 import Ships.Random9WayMovement;
 import Ships.StandardShipCombat;
 
-public class Ship {
+public abstract class Ship {
 	protected byte _x;
 	protected byte _y;
 	protected String _type;

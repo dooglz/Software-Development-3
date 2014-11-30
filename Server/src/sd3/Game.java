@@ -9,13 +9,13 @@ public class Game {
 	private PlayerShip _player;
 	public boolean running;
 	public ArrayList<GameState> _states;
+	public String[] Shiptypes = {"BattleStar","BattleCruiser","BattleShooter"};
 	
 	public Game()
 	{	
 		_states = new ArrayList<GameState>();
 		_enemies = new ArrayList<Ship>();
 		_player = new PlayerShip((byte)1, (byte)1);
-		//_enemies.add(new BattleStar());
 		running = true;
 	}
 	
@@ -27,40 +27,41 @@ public class Game {
 		Vector2 pm = _player.getMove();
 		newState.AddMove(_player, pm.x, pm.y);
 		
-		//update  all enemies
+		//Update all enemies
+		ArrayList<Thread> threads = new ArrayList<Thread>();
 		for(int i =0; i<_enemies.size();i++){
-			Ship s = _enemies.get(i);
-			s.Heal();
-			
-			Vector2 m = s.getMove();
-			
-			//Check for combat
-			s.Heal();
-			if(m.x == pm.x && m.y == pm.y){
-				s.Attack(_player);
-			}
-			
-			//check for dead ships
-			if (s.isDead()){
-				newState.DeleteShip(s);
-			}else{
-				newState.AddMove(s, m.x, m.y);
-			}
+			Thread t = new EnemyShipAiThread(_enemies.get(i),pm, _player, newState);
+			threads.add(t);
+			t.start();
 		}
 		
+		//wait for completion
+		for (Thread thread : threads) {
+			 try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+			
+		//System.out.println("Threads done");
+		
+		//Is Game over?
 		if(_player.isDead()){
-			//Game over
 			System.out.println("Game over");
 			running = false;
 		}
 
-		//spawn new enemy
+		//Spawn new enemy
 		if (Math.random() > (1d/3d)){
-			newState.CreateShip("BattleStar");
+			int i = (int) Math.floor(Math.random() * Shiptypes.length);
+			System.out.println(i);
+			newState.CreateShip(Shiptypes[i]);
 		}
+		
+		//put state on stack and update
 		_states.add(newState);
 		ExecuteState(newState);
-		
 	}
 	
 	public void ExecuteState(GameState state){		
@@ -83,7 +84,13 @@ public class Game {
 			if(_enemies.contains(s)){
 				//TODO
 			}else{
-				_enemies.add(new BattleStar());
+				if(s.equals("BattleStar")){
+					_enemies.add(new BattleStar());
+				}else if(s.equals("BattleCruiser")){
+					_enemies.add(new BattleCruiser());
+				}else{
+					_enemies.add(new BattleShooter());
+				}
 			}
 		}
 		//
