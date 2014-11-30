@@ -114,23 +114,24 @@
 
             <p>
 				<div class="onoffswitch">
-				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked disabled="true">
 				<label class="onoffswitch-label" for="myonoffswitch">
 					<span class="onoffswitch-inner"></span>
 					<span class="onoffswitch-switch"></span>
 				</label>
 			</div>
 			<span class="tab"></span>
-				<a class="btn btn-lg btn-success" href="#" role="button" id="trnbtn">Next Turn</a>
+				<a class="btn btn-lg btn-success" href="#" role="button" id="trnbtn" disabled="true">Next Turn</a>
 			<span class="tab"></span>
-				<a class="btn btn-lg btn-success" href="#" role="button" id="resbtn">Restart</a>
-                <a class="btn btn-lg btn-success" href="#" role="button" id="undobtn">Undo</a>
-                <a class="btn btn-lg btn-success" href="#" role="button" id="redobtn">Redo</a>
+				<a class="btn btn-lg btn-success" href="#" role="button" id="resbtn" disabled="true">Restart</a>
+                <a class="btn btn-lg btn-success" href="#" role="button" id="undobtn" disabled="true">Undo</a>
+                <a class="btn btn-lg btn-success" href="#" role="button" id="redobtn" disabled="true">Redo</a>
             </p>
             <p>
                 Server Address:
                 <input type="text" name="ipbx" placeholder="ws://127.0.0.1:8887" id="Ipbox" value="ws://127.0.0.1:8887">
                 <a class="btn btn-sm btn-success" href="#" role="button" id="connectbtn">Connect</a>
+				<a class="btn btn-sm btn-danger" href="#" role="button" id="disconctbtn" disabled="true">Disconnect</a>
             </p>
             <p>
                 Connection Status: <span id="constatus">Disconnected</span>

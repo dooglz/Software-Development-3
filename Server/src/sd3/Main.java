@@ -23,6 +23,7 @@ public final class Main {
 	
 	public static Game newGame(int gameID)
 	{
+		System.out.println("New game: ID - "+gameID);
 		Game g = new Game();
 		_games.put(gameID, g);
 		return g;
@@ -30,6 +31,7 @@ public final class Main {
 	
 	public static void removeGame(int gameID)
 	{
+		System.out.println("Deleted game: ID - "+gameID);
 		_games.remove(gameID);
 	}
 	

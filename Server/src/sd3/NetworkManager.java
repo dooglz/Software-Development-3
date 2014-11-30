@@ -22,7 +22,7 @@ public final class NetworkManager extends WebSocketServer {
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 		//Handle closing connection here	
-		Main.newGame(System.identityHashCode(conn));
+		Main.removeGame(System.identityHashCode(conn));
 	}
 	
 	@Override
@@ -40,6 +40,8 @@ public final class NetworkManager extends WebSocketServer {
 	    }else if(message.equals("TurnA")){
 	    	Main.getGame(System.identityHashCode(conn)).turn(false);
 	    	sendState(conn);
+	    }else if(message.equals("RESTART")){
+	    	Main.removeGame(System.identityHashCode(conn));
 	    }
 	}
 	

@@ -36,7 +36,6 @@ public class Game {
 			if (s.isDead()){
 				_enemies.remove(s);
 				i--;
-				System.out.println("Dead ship");
 			}
 		}
 		
@@ -48,8 +47,9 @@ public class Game {
 	
 		//sAggpawn new enemy
 		if (Math.random() > (1d/3d)){
-			_enemies.add(new BattleStar());
+			//_enemies.add(new BattleStar());
 		}
+		_enemies.add(new BattleStar());
 	}
 	
 	public ArrayList<Ship> GetEnemies() {

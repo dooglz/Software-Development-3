@@ -12,7 +12,6 @@ public class PlayerShip extends Ship {
 
 	public void setAggressive(boolean b)
 	{
-		System.out.println(b);
 		if(b){
 			_combatMode = new PlayerPassiveCombat();
 		}else{

@@ -3,6 +3,8 @@
 var aaf = 0;
 var SOCKET;
 var SOCKETSTATE;
+var ANIMATING;
+var GAMESTATE;
 var ships = [];
 var PLAYEROBJ;
 var MOVETIME = 1500;
@@ -14,8 +16,81 @@ function verifyWSsupport() {
         console.info("Websockets not supported");
         SOCKETSTATE = "NOSUPPORT";
         $("#constatus").html("Websockets not supported on this browser!");
-        $("#connectbtn").attr("disabled", true);
     }
+}
+
+function updateUI()
+{
+	if(ANIMATING){
+		$("#myonoffswitch").attr("disabled", true);
+		$("#trnbtn").attr("disabled", true);
+		$("#resbtn").attr("disabled", true);
+		$("#undobtn").attr("disabled", true);
+		$("#redobtn").attr("disabled", true);
+		$("#Ipbox").attr("disabled", true);
+		$("#connectbtn").attr("disabled", true);
+		$("#disconctbtn").attr("disabled", true);
+		return;
+	}
+	
+	switch(SOCKETSTATE)
+	{
+		case("NOSUPPORT"):
+			$("#myonoffswitch").attr("disabled", true);
+			$("#trnbtn").attr("disabled", true);
+			$("#resbtn").attr("disabled", true);
+			$("#undobtn").attr("disabled", true);
+			$("#redobtn").attr("disabled", true);
+			$("#Ipbox").attr("disabled", true);
+			$("#connectbtn").attr("disabled", true);
+			$("#disconctbtn").attr("disabled", true);
+			break;
+		case("NULL"):
+			$("#myonoffswitch").attr("disabled", true);
+			$("#trnbtn").attr("disabled", true);
+			$("#resbtn").attr("disabled", true);
+			$("#undobtn").attr("disabled", true);
+			$("#redobtn").attr("disabled", true);
+			$("#Ipbox").attr("disabled", false);
+			$("#connectbtn").attr("disabled", false);
+			$("#disconctbtn").attr("disabled", true);
+			break;
+		case("READY"):
+			switch(GAMESTATE)
+			{
+				case("GOTSTATE"):
+					$("#myonoffswitch").attr("disabled", false);
+					$("#trnbtn").attr("disabled", false);
+					$("#resbtn").attr("disabled", false);
+					$("#undobtn").attr("disabled", false);
+					$("#redobtn").attr("disabled", false);
+					$("#Ipbox").attr("disabled", true);
+					$("#connectbtn").attr("disabled", true);
+					$("#disconctbtn").attr("disabled", false);
+					break;
+				case("ANIMATE"):
+					$("#myonoffswitch").attr("disabled", true);
+					$("#trnbtn").attr("disabled", true);
+					$("#resbtn").attr("disabled", true);
+					$("#undobtn").attr("disabled", true);
+					$("#redobtn").attr("disabled", true);
+					$("#Ipbox").attr("disabled", true);
+					$("#connectbtn").attr("disabled", true);
+					$("#disconctbtn").attr("disabled", true);
+					break;
+				default:
+					$("#myonoffswitch").attr("disabled", false);
+					$("#trnbtn").attr("disabled", true);
+					$("#resbtn").attr("disabled", false);
+					$("#undobtn").attr("disabled", true);
+					$("#redobtn").attr("disabled", true);
+					$("#Ipbox").attr("disabled", true);
+					$("#connectbtn").attr("disabled", true);
+					$("#disconctbtn").attr("disabled", false);
+					break;
+			}
+			break;
+	}
 }
 
 function Decoder(msg) {
@@ -26,10 +101,14 @@ function Decoder(msg) {
 	} catch (e) {
 		// is not a valid JSON string
 		switch (msg) {
-		case ("Hello"):
-			console.info("Server says Hello");
-			$("#constatus").html("Server connected");
-			SOCKETSTATE = "READY";
+			case ("Hello"):
+				console.info("Server says Hello");
+				$("#constatus").html("Server connected");
+				SOCKETSTATE = "READY";
+			break;
+			case ("GAMEOVER"):
+				console.info("Server says GAMEOVER");
+				GAMESTATE = "OVER";
 			break;
 		default:
 			console.info("Unkown message from host: " + msg);
@@ -39,9 +118,21 @@ function Decoder(msg) {
 	}
 
 	if (obj.type === "state") {
+		GAMESTATE = "GOTSTATE";
 		console.info("state update, " + obj.time);
+		if(obj.state == "over")
+		{
+			 gameOver();
+		}
 		UpdateGrid(obj.grid);
 	}
+}
+
+function gameOver()
+{
+	console.warn("Game over!");
+	alert("Game over!");
+	GAMESTATE = "OVER"
 }
 
 function Connect(IP) {
@@ -75,6 +166,8 @@ function Connect(IP) {
         console.info("Connection is closed...");
         $("#constatus").html("Disconnected");
         SOCKETSTATE = "NULL";
+		GAMESTATE = "NULL";
+		updateUI();
     };
 
     SOCKET.onerror = function () {
@@ -96,24 +189,27 @@ function doTurn(){
 
 $(document).ready(function () {
     SOCKETSTATE = "NULL";
+	GAMESTATE = "NULL";
     verifyWSsupport();
     $("#connectbtn").click(function () {
         Connect($("#Ipbox").val());
     });
-    $("#resbtn").click(function () {
-        getState();
+    $("#disconctbtn").click(function () {
+		SOCKET.close();
+    });
+	$("#resbtn").click(function () {
+		Restart();
     });
 	$("#trnbtn").click(function () {
-        doTurn();
-        $("#trnbtn").attr("disabled", true);
-        var wait = setInterval(function(){
+       doTurn();
+       ANIMATING = true;
+		updateUI();
+       var wait = setInterval(function(){
             if( $("div:animated").size() <=0 ){
                 clearInterval(wait);
-                $("#trnbtn").attr("disabled", false);
+				ANIMATING = false;
             }
         },200);
-        
-        
     });
 	
 	$("#myonoffswitch").click(function () {
@@ -135,7 +231,16 @@ function getState() {
     }
 }
 
-
+function Restart(){
+	$(".ship").remove();
+	GAMESTATE = "NULL";
+	ships = [];
+	PLAYEROBJ = null;
+	if (SOCKETSTATE === "READY") {
+        SOCKET.send("RESTART");
+    }
+	getState();
+}
 
 function UpdateGrid(grid) {
     console.info(grid);
@@ -241,7 +346,7 @@ function tileToCoord(tileX,tileY)
 function killShip(index){
 	var deadship = ships[index];
 	if(deadship.type == "player"){
-		console.error("game over");
+		console.error("player object data not received in state update!");
 	}else{
 		console.error("dead ship");
 		//move towards player and explode
@@ -258,6 +363,7 @@ function killShip(index){
 
 
 function Update(yo) {
+	updateUI();
     aaf += 0.1;
     return;
     

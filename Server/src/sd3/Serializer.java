@@ -3,7 +3,14 @@ package sd3;
 public final class Serializer {
 	public static String jsonify(Game g){
 		StringBuilder str = new StringBuilder(30);
-		str.append("{\"type\":\"state\",\"time\":100,\"state\":\"play\",\"grid\":[");
+		
+		String state;
+		if(g.running){
+			state = "play";
+		}else{
+			state = "over";
+		}
+		str.append("{\"type\":\"state\",\"time\":100,\"state\":\""+state+"\",\"grid\":[");
 		
 		str.append("{\"type\":\"player\",\"X\":"+g.GetPlayer().GetX()+",\"Y\":"+g.GetPlayer().GetY()+",\"id\":"+System.identityHashCode(g.GetPlayer())+"}");
 		for(Ship s: g.GetEnemies())
