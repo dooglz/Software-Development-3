@@ -4,7 +4,7 @@ var aaf = 0;
 var SOCKET;
 var SOCKETSTATE;
 var ships = [];
-var PLAYER;
+var PLAYEROBJ;
 
 function verifyWSsupport() {
     if ("WebSocket" in window) {
@@ -104,6 +104,15 @@ $(document).ready(function () {
     });
 	$("#trnbtn").click(function () {
         doTurn();
+        $("#trnbtn").attr("disabled", true);
+        var wait = setInterval(function(){
+            if( $("div:animated").size() <=0 ){
+                clearInterval(wait);
+                 $("#trnbtn").attr("disabled", false);
+            }
+        },200);
+        
+        
     });
 	
     // var timer = window.requestAnimationFrame(Update);
@@ -153,16 +162,37 @@ function UpdateGrid(grid) {
             newship.jqo = jQuery('<div/>', {
                 id: 'ship' + newship.id,
                 class: 'ship ' + col,
-            }).appendTo('#' + newship.X + newship.Y);
+            }).appendTo(document.body);
 			
-			if(newship.type === "player"){PLAYER =  newship.jqo;}
-
+			if(newship.type === "player"){PLAYEROBJ = newship;}
             ships[ships.length] = newship;
+            
+            var coords = tileToCoord(newship.X,newship.Y);
+            var newX = getRandomInt(coords.minX,coords.maxX);
+            var newY = getRandomInt(coords.minY,coords.maxY);
+            newship.jqo.css("left", newX + "px");
+            newship.jqo.css("top", newY  + "px");
 
-        } else if (result.length == 1) {
-            result[0].X = grid[i].X;
-            result[0].Y = grid[i].Y;
-			result[0].jqo.detach().appendTo('#' + result[0].X + result[0].Y);
+        }
+        else if (result.length == 1) 
+        {
+            var a = false;
+            if(result[0].X != grid[i].X){
+                result[0].X = grid[i].X;
+                a=true;
+            }
+            if (result[0].Y != grid[i].Y){
+                result[0].Y = grid[i].Y;
+                a=true;
+            }
+            if(a){
+                // I have moved
+                var coords = tileToCoord(result[0].X,result[0].Y);
+                var newX = getRandomInt(coords.minX,coords.maxX);
+                var newY = getRandomInt(coords.minY,coords.maxY);
+                // head to new tile
+                result[0].jqo.animate({left: newX+ "px", top: newY+ "px"},3000);
+            }
 			
         } else {
             console.error("!!!!2");
@@ -182,6 +212,23 @@ function UpdateGrid(grid) {
 	}
 }
 
+
+function tileToCoord(tileX,tileY)
+{
+    var tilewidth = $('td').outerWidth();
+    var shipwidth = $('.ship').outerWidth();
+    var shipheight = $('.ship').outerHeight();
+    var tile = $('#'+tileX+''+tileY);
+    var tileo = tile.offset();
+    
+    var coords = new Object();
+    coords.minX = tileo.left;
+    coords.minY = tileo.top;
+    coords.maxX = tileo.left + (tilewidth - shipwidth);
+    coords.maxY = tileo.top + (tilewidth - shipheight);
+    return coords;
+}
+
 function killShip(index){
 	var deadship = ships[index];
 	if(deadship.type == "player"){
@@ -189,15 +236,13 @@ function killShip(index){
 	}else{
 		console.error("dead ship");
 		//move towards player and explode
-		var offset = deadship.jqo.offset()
-		deadship.jqo.detach().appendTo(document.body);
-		deadship.jqo.css("left", offset.left + "px");
-        deadship.jqo.css("top", offset.top + "px");
 		ships.splice(index,1);
 		
-		deadship.jqo
-		.animate({left: PLAYER.offset().left+ "px", top: PLAYER.offset().top+ "px"}, 3000)
-		.animate({opacity:0},2000, function() {deadship.jqo.remove();});
+        var playertile = tileToCoord(PLAYEROBJ.X,PLAYEROBJ.Y);
+        var newX = getRandomInt(playertile.minX,playertile.maxX);
+        var newY = getRandomInt(playertile.minY,playertile.maxY);
+        deadship.jqo.animate({left: newX+ "px", top: newY+ "px"},3000)
+        .animate({opacity:0},2000, function() {deadship.jqo.remove();});
 	}
 
 }
@@ -205,6 +250,8 @@ function killShip(index){
 
 function Update(yo) {
     aaf += 0.1;
+    return;
+    
     var os = $('td').outerWidth();
 
     $(".gametile").each(function(index) {
@@ -223,4 +270,8 @@ function Update(yo) {
             $(this).css("top", (maxY + y) + "px");
         });
     });
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

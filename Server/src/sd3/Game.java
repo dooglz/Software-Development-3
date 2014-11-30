@@ -12,15 +12,21 @@ public class Game {
 	{	
 		_enemies = new ArrayList<Ship>();
 		_player = new PlayerShip((byte)1, (byte)1);
-		_enemies.add(new BattleStar());
+		//_enemies.add(new BattleStar());
 		running = true;
 	}
 	
 	public void Update()
-	{
-		//spawn new enemy
-		if (Math.random() > (1d/3d)){
-			//_enemies.add(new BattleStar());
+	{		
+		_player.Heal();
+		{
+			byte x; 
+			byte y;
+			do {
+				x = (byte)((int)(Math.random() * (5))-1);
+				y = (byte)((int)(Math.random() * (5))-1);
+			} while(!_player.ValdateMove(x, y));
+			_player.Move(x, y);
 		}
 		
 		//update  all enemies
@@ -55,7 +61,12 @@ public class Game {
 			System.out.println("Game over");
 			running = false;
 		}
-		_player.Heal();
+		
+		
+		//spawn new enemy
+		if (Math.random() > (1d/3d)){
+			_enemies.add(new BattleStar());
+		}
 	}
 	
 	public ArrayList<Ship> GetEnemies() {
