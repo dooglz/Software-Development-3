@@ -26,15 +26,25 @@ tbody { display: block; width: 100%; }
     min-height: 50px;
     min-width:  80px;
 }
-.ship.green {
+.ship.p {
+    background-image: url("../img/shipP.gif");
+}
+.ship.a {
+    background-image: url("../img/shipA.gif");
+}
+.ship.e1  {
     background-image: url("../img/ship1.gif");
 }
-.ship.red  {
+.ship.e2  {
     background-image: url("../img/ship2.gif");
 }
-.ship.blue  {
+.ship.e3  {
     background-image: url("../img/ship3.gif");
 }
+.ship.e4  {
+    background-image: url("../img/ship4.gif");
+}
+
 
 span.tab{
 

@@ -11,7 +11,6 @@ public final class Serializer {
 			str.append(",{\"type\":\""+s.GetType()+"\",\"X\":"+s.GetX()+",\"Y\":"+s.GetY()+",\"id\":"+System.identityHashCode(s)+"}");
 		}
 		str.append("]}");
-		System.out.println(str.toString());
 		return str.toString();
 	}
 

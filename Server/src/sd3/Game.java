@@ -19,51 +19,34 @@ public class Game {
 	public void Update()
 	{		
 		_player.Heal();
-		{
-			byte x; 
-			byte y;
-			do {
-				x = (byte)((int)(Math.random() * (5))-1);
-				y = (byte)((int)(Math.random() * (5))-1);
-			} while(!_player.ValdateMove(x, y));
-			_player.Move(x, y);
-		}
+		_player.Move();
 		
 		//update  all enemies
 		for(int i =0; i<_enemies.size();i++){
 			Ship s = _enemies.get(i);
-		
 			s.Heal();
-			byte x; 
-			byte y;
-			do {
-				x = (byte)((int)(Math.random() * (5))-1);
-				y = (byte)((int)(Math.random() * (5))-1);
-			} while(!s.ValdateMove(x, y));
-			s.Move(x, y);
-			
+			s.Move();
 			//Check for combat
 			s.Heal();
-			if(x == _player.GetX() && y == _player.GetY()){
+			if(s.GetX() == _player.GetX() && s.GetY() == _player.GetY()){
 				s.Attack(_player);
 			}
 			
 			//check for dead ships
-			if (s.GetHealth() <= 0){
+			if (s.isDead()){
 				_enemies.remove(s);
 				i--;
 				System.out.println("Dead ship");
 			}
 		}
 		
-		if(_player.GetHealth() <= 0){
+		if(_player.isDead()){
 			//Game over
 			System.out.println("Game over");
 			running = false;
 		}
-		
-		
-		//spawn new enemy
+	
+		//sAggpawn new enemy
 		if (Math.random() > (1d/3d)){
 			_enemies.add(new BattleStar());
 		}
@@ -82,6 +65,7 @@ public class Game {
 	}
 	
 	public void turn(boolean mode){
+		_player.setAggressive(mode);
 		Update();
 		return;
 	}

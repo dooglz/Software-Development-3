@@ -5,6 +5,7 @@ var SOCKET;
 var SOCKETSTATE;
 var ships = [];
 var PLAYEROBJ;
+var MOVETIME = 1500;
 
 function verifyWSsupport() {
     if ("WebSocket" in window) {
@@ -108,11 +109,19 @@ $(document).ready(function () {
         var wait = setInterval(function(){
             if( $("div:animated").size() <=0 ){
                 clearInterval(wait);
-                 $("#trnbtn").attr("disabled", false);
+                $("#trnbtn").attr("disabled", false);
             }
         },200);
         
         
+    });
+	
+	$("#myonoffswitch").click(function () {
+        if($("#myonoffswitch").prop('checked')){
+			PLAYEROBJ.jqo.css('background-image','url("img/shipP.gif")');
+		}else{
+ 			PLAYEROBJ.jqo.css('background-image','url("img/shipA.gif")');
+		}
     });
 	
     // var timer = window.requestAnimationFrame(Update);
@@ -152,10 +161,10 @@ function UpdateGrid(grid) {
             var col;
             switch (newship.type) {
                 case "player":
-                    col = 'green';
+                    col = 'p';
                     break;
                 default:
-                    col = 'red';
+                    col = 'e1';
                     break;
             }
 
@@ -191,7 +200,7 @@ function UpdateGrid(grid) {
                 var newX = getRandomInt(coords.minX,coords.maxX);
                 var newY = getRandomInt(coords.minY,coords.maxY);
                 // head to new tile
-                result[0].jqo.animate({left: newX+ "px", top: newY+ "px"},3000);
+                result[0].jqo.animate({left: newX+ "px", top: newY+ "px"},MOVETIME);
             }
 			
         } else {
@@ -241,8 +250,8 @@ function killShip(index){
         var playertile = tileToCoord(PLAYEROBJ.X,PLAYEROBJ.Y);
         var newX = getRandomInt(playertile.minX,playertile.maxX);
         var newY = getRandomInt(playertile.minY,playertile.maxY);
-        deadship.jqo.animate({left: newX+ "px", top: newY+ "px"},3000)
-        .animate({opacity:0},2000, function() {deadship.jqo.remove();});
+        deadship.jqo.animate({left: newX+ "px", top: newY+ "px"},MOVETIME)
+        .animate({opacity:0},1500, function() {deadship.jqo.remove();});
 	}
 
 }
