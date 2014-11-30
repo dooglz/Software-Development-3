@@ -8,6 +8,7 @@ var GAMESTATE;
 var ships = [];
 var PLAYEROBJ;
 var MOVETIME = 1500;
+var LASTSTATE;
 
 function verifyWSsupport() {
     if ("WebSocket" in window) {
@@ -183,6 +184,10 @@ function doTurn(){
 
 function Undo(){
 	if (SOCKETSTATE === "READY") {
+		$(".ship").remove();
+		GAMESTATE = "NULL";
+		ships = [];
+		PLAYEROBJ = null;
         SOCKET.send("UNDO");
     }
 }
@@ -248,6 +253,12 @@ function Restart(){
 }
 
 function UpdateGrid(grid) {
+	if (grid == LASTSTATE){
+		console.error("skip");
+		return;
+	}
+	LASTSTATE = grid;
+	
     console.info(grid);
     for (var i = 0; i < grid.length; i++) {
 

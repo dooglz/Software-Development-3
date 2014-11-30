@@ -59,6 +59,10 @@ public class Ship {
 		_y = v.y;
 	}
 	
+	public Vector2 getMove(){
+		return _moveMethod.nextMove(_x,_y);
+	}
+	
 	public byte GetX(){
 		return _x;
 	}
