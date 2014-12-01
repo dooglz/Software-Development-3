@@ -16,20 +16,21 @@ public final class NetworkManager extends WebSocketServer {
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
 		// //Handle new connection here
-		
+		System.out.println("New Client: "+System.identityHashCode(conn));
 	}
 	
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 		//Handle closing connection here	
 		Main.removeGame(System.identityHashCode(conn));
+		System.out.println("Client Discconnect: "+System.identityHashCode(conn));
 	}
 	
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		//Handle client received message here
 	    //send a message back:
-		//System.out.println("Message: "+message);
+		System.out.println("Client: "+System.identityHashCode(conn)+" - Message: "+message);
 	    if(message.equals("state")){
 	    	sendState(conn);
 	    }else if(message.equals("Hello")){

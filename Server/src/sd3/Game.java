@@ -55,7 +55,6 @@ public class Game {
 		//Spawn new enemy
 		if (Math.random() > (1d/3d)){
 			int i = (int) Math.floor(Math.random() * Shiptypes.length);
-			System.out.println(i);
 			newState.CreateShip(Shiptypes[i]);
 		}
 		

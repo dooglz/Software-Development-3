@@ -7,7 +7,7 @@ public final class Main {
 	private static NetworkManager _netMan;
 	
 	public static void main(String[] args) {
-		System.out.println("SD# course work - Sam Serrels");
+		System.out.println("SD3 course work - Sam Serrels");
 		_netMan = new NetworkManager();
 		_netMan.start();
 		_games = new HashMap<Integer, Game>();
